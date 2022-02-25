@@ -24,10 +24,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'djangoapp:index' %}">Home</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'djangoapp:about' %}">About</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
                     </li>
                 </ul>
@@ -51,10 +51,25 @@
         </nav>
 
         <h1 class="ml-2 display-2">
-        About Us
+        Contact Us
         </h1>
-        <p class="ml-2 text-muted">
-        Welcome to Best Cars dealership, home to the best cars in North America. We sell domestic and imported cars at reasonable prices.
+        <br><br>
+        <table class="table table-bordered w-50 ml-auto mr-auto">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Phone Number</td>
+                    <td class="text-right">+12 3456 7890</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Email</td>
+                    <td class="text-right">cars@dealership.com</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Address</td>
+                    <td class="text-right">123 Example Street</td>
+                </tr>
+            </tbody>
+        </table>
         </p>
     </body>
 </html>
