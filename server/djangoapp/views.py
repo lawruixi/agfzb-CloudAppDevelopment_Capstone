@@ -17,6 +17,18 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 
+def registration(request):
+    context = {}
+    if request.method == 'GET':
+        return render(request, 'djangoapp/registration.html', context)
+    #TODO
+
+def login(request):
+    context = {}
+    if request.method == 'POST':
+        #TODO
+        pass
+    return render(request, 'djangoapp/login.html', context)
 # Create an `about` view to render a static about page
 # def about(request):
 # ...
