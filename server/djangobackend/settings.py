@@ -29,6 +29,8 @@ APPEND_SLASH = True
 
 ALLOWED_HOSTS = ["localhost", "lawruixi.mybluemix.net"]
 
+# For Django Auto fields
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
 

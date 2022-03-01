@@ -32,7 +32,7 @@ class CarMake(models.Model):
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
 class CarModel(models.Model):
-    make = models.ForeignKey(CarMake, on_delete=Models.CASCADE)
+    make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(null=False, max_length=50)
     dealer_id = models.IntegerField()
 
@@ -49,8 +49,8 @@ class CarModel(models.Model):
         VAN = "Van";             MINIVAN = "Minivan";
         MINIBUS = "Minibus";     CAMPERVAN = "Campervan"
         TRUCK = "Truck";         BIG_TRUCK = "Big Truck"
-    type = Models.CharField(max_length=15, choices = Types.choices(), default = Types.MICRO);
-    year = Models.DateField(null = False);
+    type = models.CharField(max_length=15, choices = Types.choices(), default = Types.MICRO);
+    year = models.DateField(null = False);
     def __str__(self):
         return "Name: {0},\nMake: {1},\n Dealer: {2},\n Type: {3}".format(self.name, self.make, self.dealer, self.type);
 
