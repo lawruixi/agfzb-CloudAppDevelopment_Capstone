@@ -3,7 +3,7 @@ import json
 # import related models here
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
-
+from .env import nlu_key, nlu_url
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -12,8 +12,13 @@ def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
     try:
-        # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        api_key = kwargs.get('api_key', None)
+        if api_key:
+            #api_key was provided
+            response = requests.get(url, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', api_key), params=kwargs)
+        else:
+            # Call get method of requests library with URL and parameters
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
     except:
         # If any error occurs
@@ -64,14 +69,15 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                 dealership = review["dealership"],
                 name = review["name"],
                 purchase = review["purchase"],
-                review= review["review"],
+                review = review["review"],
                 id = review["id"],
                 purchase_date  = review.get("purchase_date", None),
                 car_make = review.get("car_make", None),
                 car_model = review.get("car_model", None),
                 car_year  = review.get("car_year", None),
-                sentiment  = review.get("sentiment", None)
+                sentiment = "none"
             );
+            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
     return results
 
@@ -80,6 +86,20 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
-
-
+def analyze_review_sentiments(dealer_review):
+    json_result = get_request(nlu_url,
+                                text=dealer_review,
+                                version="2021-08-01",
+                                features="sentiment",
+                                return_analyzed_text = True,
+                                api_key=nlu_key
+    )
+    if json_result:
+        error = json_result.get("error", None)
+        if error:
+            print("NLU Error")
+            return "none"
+        else:
+            return json_result["sentiment"]["document"]["label"]
+    print("NLU Error")
+    return "none"
