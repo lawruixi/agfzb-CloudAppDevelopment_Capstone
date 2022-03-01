@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -100,6 +100,19 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(review_string)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    user = request.user
+    if user.is_authenticated:
+        #TODO: Probably dynamic page?
+        review = dict()
+        review["time"] = datetime.utcnow().isoformat()
+        review["dealership"] = dealer_id
+        review["review"] = "Temporary review, but this is great!"
 
+        json_payload = {"review": review}
+        url = "https://48d8f675.us-south.apigw.appdomain.cloud/api/review"
+        response = post_request(url, json_payload, dealerId=dealer_id)
+        return HttpResponse(response)
+    else:
+        #TODO: Better page? Or like some error dialog box
+        return HttpResponse("You must be authenticated to post a review.")

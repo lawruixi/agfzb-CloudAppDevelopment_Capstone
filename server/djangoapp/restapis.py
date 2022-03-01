@@ -22,7 +22,7 @@ def get_request(url, **kwargs):
                                     params=kwargs)
     except:
         # If any error occurs
-        print("Network exception occurred")
+        print("Network exception occurred during GET.")
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
@@ -30,7 +30,18 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    print(json_payload)
+    print(kwargs)
+    print("POST to {}".format(url))
+    try:
+        response = requests.post(url, params=kwargs, json=json_payload)
+    except:
+        print("Network exception occured during POST.")
+    status_code = response.status_code
+    print("With status {}".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -103,3 +114,4 @@ def analyze_review_sentiments(dealer_review):
             return json_result["sentiment"]["document"]["label"]
     print("NLU Error")
     return "none"
+
