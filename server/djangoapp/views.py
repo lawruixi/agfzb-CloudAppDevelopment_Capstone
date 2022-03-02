@@ -1,3 +1,6 @@
+###
+### views.py
+###
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -93,11 +96,9 @@ def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://48d8f675.us-south.apigw.appdomain.cloud/api/review"
         reviews = get_dealer_reviews_from_cf(url, dealership=dealer_id)
-        #review_names = ' '.join([review.name for review in reviews])
-        review_string = ""
-        for review in reviews:
-            review_string += "Name: {0}, Review: {1}, Sentiment: {2}<br>".format(review.name, review.review, review.sentiment)
-        return HttpResponse(review_string)
+        context["dealer_id"] = dealer_id
+        context["reviews"] = reviews
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
