@@ -51,8 +51,9 @@
         </nav>
 
         <!-- Add reviews as cards -->
+        <div class="d-flex flex-wrap mt-3 mx-3 justify-content-between">
             {% for review in reviews %}
-            <div class="card" style="width: 18rem;">
+            <div class="card mx-3 my-3 w-25">
                 {% if review.sentiment == "positive" %}
                 <img class="card-img-left" style="width: 2rem;" src="{{MEDIA_URL}}/emoji/positive.png">
                 {% elif review.sentiment == "negative" %}
@@ -79,6 +80,7 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
 
     </body>
 
