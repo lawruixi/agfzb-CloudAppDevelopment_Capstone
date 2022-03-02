@@ -52,7 +52,7 @@ class CarModel(models.Model):
     type = models.CharField(max_length=15, choices = Types.choices(), default = Types.MICRO);
     year = models.DateField(null = False);
     def __str__(self):
-        return "Name: {0},\nMake: {1},\n Dealer: {2},\n Type: {3}".format(self.name, self.make, self.dealer, self.type);
+        return "Name: {0},\nMake: {1},\n Dealer: {2},\n Type: {3}".format(self.name, self.make, self.dealer_id, self.type);
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer:
