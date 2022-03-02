@@ -83,8 +83,8 @@ def get_dealerships(request):
     if request.method == "GET":
         url = "https://48d8f675.us-south.apigw.appdomain.cloud/api/dealership"
         dealerships = get_dealers_from_cf(url)
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        return HttpResponse(dealer_names);
+        context["dealerships"] = dealerships
+        return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
@@ -116,3 +116,4 @@ def add_review(request, dealer_id):
     else:
         #TODO: Better page? Or like some error dialog box
         return HttpResponse("You must be authenticated to post a review.")
+
