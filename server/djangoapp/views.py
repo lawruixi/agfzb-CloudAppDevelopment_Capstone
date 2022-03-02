@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments, post_request
 from django.contrib.auth import login, logout, authenticate
@@ -101,7 +102,6 @@ def get_dealer_details(request, dealer_id):
         return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
-# Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
     user = request.user
     if user.is_authenticated:
@@ -111,16 +111,30 @@ def add_review(request, dealer_id):
             context["cars"] = cars;
             context["dealer_id"] = dealer_id;
             return render(request, "djangoapp/add_review.html", context);
-            ##TODO: Probably dynamic page?
-            #review = dict()
-            #review["time"] = datetime.utcnow().isoformat()
-            #review["dealership"] = dealer_id
-            #review["review"] = "Temporary review, but this is great!"
+        elif request.method == "POST":
+            content = request.POST["content"]
+            purchased = request.POST["purchaseCheckbox"] == "on"
+            car_id = request.POST["car"]
+            purchase_date = request.POST["purchaseDate"]
 
-            #json_payload = {"review": review}
-            #url = "https://48d8f675.us-south.apigw.appdomain.cloud/api/review"
-            #response = post_request(url, json_payload, dealerId=dealer_id)
-            #return HttpResponse(response)
+            review = dict()
+            review["time"] = datetime.utcnow().isoformat()
+            review["name"] = "{0} {1}".format(user.first_name, user.last_name)
+            review["dealership"] = dealer_id
+            review["review"] = content
+            review["purchase"] = purchased
+            review["purchase_date"] = purchase_date
+
+            car = CarModel.objects.get(pk = car_id)
+            review["car_model"] = car.name
+            review["car_make"] = car.make.name
+            review["car_year"] = car.year.strftime("%Y")
+
+            json_payload = {"review": review}
+            url = "https://48d8f675.us-south.apigw.appdomain.cloud/api/review"
+            response = post_request(url, json_payload, dealerId=dealer_id)
+            return HttpResponseRedirect(reverse(viewname='djangoapp:dealer_details', args=(dealer_id,)))
+
     else:
         #TODO: Better page? Or like some error dialog box
         return HttpResponse("You must be authenticated to post a review.")
