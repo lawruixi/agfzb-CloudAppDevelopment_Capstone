@@ -10,6 +10,9 @@ env:
   IBM_CLOUD_ORG: lawruixi@gmail.com
   MANIFEST_NAME: manifest.yml
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
+  
+  NLU_KEY: ${{secrets.NLU_KEY}}
+  NLU_URL: ${{secrets.NLU_URL}}
 
 defaults:
   run:
@@ -22,6 +25,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Create env.py
+        run: |
+          echo "nlu_key = $NLU_KEY" >> env.py
+          echo "nlu_url = $NLU_URL" >> env.py
+        shell: bash
+        working-directory: ./server/djangoapp
       - name: Install IBM CLI
         run: |
           curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
